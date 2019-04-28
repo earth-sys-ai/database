@@ -35,10 +35,10 @@ def addData(lat, lng, add):
     con.commit()
 
 # list locations where data exists
-def listData():
-    cur.execute("select location from surge;")
+def listData(lat, lng, rad):
+    cur.execute("select location from surge where location <@> Point(" + lat + ", " + lng + ") < " + rad + ";")
     points = cur.fetchall()
-    cur.execute("select data from surge;")
+    cur.execute("select data from surge where location <@> Point(" + lat + ", " + lng + ") < " + rad + ";")
     vals = cur.fetchall()
 
     return ("{\"points\":" + parseList(points, False) + ",\"values\":" + parseList(vals, True) + "}")
