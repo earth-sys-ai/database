@@ -21,24 +21,24 @@ def parseList(l, q):
 
 # get location data
 def getData(lat, lng):
-    cur.execute("select data from surge where location ~= point(" + lat + "," + lng + ");")
+    cur.execute("select data from surge where location ~= point(" + lng + "," + lat + ");")
     return ("{\"data\":" + parseList(cur.fetchall(), True) + "}")
 
 # clear location data
 def clearData(lat, lng):
-    cur.execute("delete from surge where location ~= point(" + lat + "," + lng + ");")
+    cur.execute("delete from surge where location ~= point(" + lng + "," + lat + ");")
     con.commit()
 
 # add data for location
 def addData(lat, lng, add):
-    cur.execute("insert into surge values ((point(" + lat + ", " + lng + ")), '" + add + "');")
+    cur.execute("insert into surge values ((point(" + lng + ", " + lat + ")), '" + add + "');")
     con.commit()
 
 # list locations where data exists
 def listData(lat, lng, rad):
-    cur.execute("select location from surge where location <@> Point(" + lat + ", " + lng + ") < " + rad + ";")
+    cur.execute("select location from surge where location <@> Point(" + lng + ", " + lat + ") < " + rad + ";")
     points = cur.fetchall()
-    cur.execute("select data from surge where location <@> Point(" + lat + ", " + lng + ") < " + rad + ";")
+    cur.execute("select data from surge where location <@> Point(" + lng + ", " + lat + ") < " + rad + ";")
     vals = cur.fetchall()
 
     return ("{\"points\":" + parseList(points, False) + ",\"values\":" + parseList(vals, True) + "}")
