@@ -1,7 +1,7 @@
 # vectorizes array of values into a array of polygons
 # each element in the output array contains two elements:
 # an array of polygons, and a value
-# each polygon contains an array of coordinates
+# each polygon contains an array of coordinates, which are an array of floats.
 
 
 import matplotlib.pyplot as plt
