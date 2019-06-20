@@ -3,36 +3,35 @@
 
 from netCDF4 import Dataset
 import numpy as np
-from data import *
 import sys
-from data import *
+from contourVector import vectorize
 
 ncv = Dataset(sys.argv[2])
 cdf = ncv.variables
 
-
-# variables to 2d array of values
+# variables to array of polygons
 def getData(cdf):
-    lat = np.array(cdf['y'][:])
-    lon = np.array(cdf['x'][:])
-    surge = np.array(cdf['surge'][:])
-    return [lat, lon, surge];
+    lat = cdf["y"][:]
+    lon = cdf["x"][:]
+    elems = cdf['element'][:,:]-1
+    data = cdf['zeta_max'][:]
+    return vectorize(lat, lon, elems, data, sys.argv[3], (len(sys.argv) == 5));
 
 
 # prints 2d data
 def printData(data):
     lat = data[0]
     lon = data[1]
-    surge = data[2]
-
+    elems = data[2]
     for i in range(len(lat)):
         curLat = lat[i]
         curLon = lon[i]
-        curSurge = surge[i]
-        print('(' + repr(curLat) + ', ' + repr(curLon) + '): ' + repr(curSurge))
+        curelems = elems[i]
+        print('(' + repr(curLat) + ', ' + repr(curLon) + '): ' + repr(curelems))
 
 
 # stores 2d data in database
+# currently does not work
 def storeData(data):
     con = psycopg2.connect(
         database = "earthsysai",
@@ -45,15 +44,16 @@ def storeData(data):
 
     lat = data[0]
     lon = data[1]
-    surge = data[2]
+    elems = data[2]
 
     leng = len(lat)
     for i in range(leng):
         curLat = lat[i]
         curLon = lon[i]
-        curSurge = surge[i]
-        addData(curLat.astype(str), curLon.astype(str), curSurge.astype(str))
+        curelems = elems[i]
+        addData(curLat.astype(str), curLon.astype(str), curelems.astype(str))
         print(str(i) + '/' + str(leng))
     
-storeData(getData(cdf))
+data = getData(cdf)
+#print(data)
 #print(len(getData(cdf)[0]))

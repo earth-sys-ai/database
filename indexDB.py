@@ -1,6 +1,7 @@
 # database manegment
 import psycopg2
 import sys
+from transectRaster import transectIndex
 
 con = psycopg2.connect(
     database = "earthsysai",
