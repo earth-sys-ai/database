@@ -3,7 +3,6 @@
 # an array of polygons, and a value
 # each polygon contains an array of coordinates, which are an array of floats.
 
-
 import matplotlib.pyplot as plt
 import matplotlib.tri as tri
 import numpy as np
@@ -17,9 +16,8 @@ def genPoly(cs, levels):
             verts = path.to_polygons()
             for v in verts:
                 poly.append(v)
-        outp.append([poly, levels[i]])
+        outp.append([levels[i], poly])
     return outp
-
 
 # takes raster points and generates a vector contour
 def vectorize(lat, lon, elems, data, res, show):

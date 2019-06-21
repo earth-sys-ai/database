@@ -64,4 +64,3 @@ Each polygon contains an array of coordinates, which are an array of floats.
 ---
 ## Warning
 As of now database importing does not work. This is being worked on as a priority.
-

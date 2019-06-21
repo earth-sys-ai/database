@@ -5,6 +5,7 @@ from netCDF4 import Dataset
 import numpy as np
 import sys
 from contourVector import vectorize
+import json
 
 ncv = Dataset(sys.argv[2])
 cdf = ncv.variables
@@ -53,7 +54,48 @@ def storeData(data):
         curelems = elems[i]
         addData(curLat.astype(str), curLon.astype(str), curelems.astype(str))
         print(str(i) + '/' + str(leng))
-    
+
+# a very rough json encoder
+def arrToJson(data, min, max):
+        polyLen = 0
+        vertLen = 0
+        outp = "{\"levels\": ["
+        for x,level in enumerate(data):
+                outp += ("{\"value\": " + str(level[0]) + ",")
+                outp += ("\"polygons\": " + "[")
+                bend = "}"
+                for i,poly in enumerate(level[1], start=1):
+                        outp += ("[")
+                        mend = "]"
+                        for n,vert in enumerate(poly, start=1):
+                                end = "]"
+                                if (n < len(poly)):
+                                        end += ","
+                                else:
+                                        vertLen += n
+                                outp += ("[" + str(vert[0]) + "," + str(vert[1]) + end)
+                        if (i < len(level[1])):
+                                mend += ","
+                        else:
+                                polyLen += i
+                        outp += mend
+                outp += "]"
+                if (x < (len(data) - 1)):
+                        bend += ","
+                outp += bend
+        outp += "],"
+        outp += "\"info\": {"
+        outp += ("\"levels\": " + str(len(data)) + ",")
+        outp += ("\"polygons\": " + str(polyLen) + ",")
+        outp += ("\"vertices\": " + str(vertLen) + ",")
+        outp += ("\"min\": " + str(min) + ",")
+        outp += ("\"max\": " + str(max))
+
+
+        outp += "}}"
+        return outp
+
 data = getData(cdf)
+print(arrToJson(data, np.min(cdf['zeta_max'][:]), np.max(cdf['zeta_max'][:])))
 #print(data)
 #print(len(getData(cdf)[0]))
