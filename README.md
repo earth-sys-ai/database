@@ -1,5 +1,7 @@
 # database
 Handles interactions between webserver and other python scripts.
+## This repo is now deprecated with the help of [datacacher](https://github.com/earth-sys-ai/datacacher).
+## Data is now stored server-side.
 
 ---
 ## Usage
